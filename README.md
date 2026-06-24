@@ -177,8 +177,11 @@ or run with VS Code Live Server.
 ### Error Explanation
 ![Error Explanation](screenshots/error.png)
 
-### AI Fix Suggestion
-![AI Fix Suggestion](screenshots/fix.png)
+### NO Error
+![No-error](screenshots/no error.png)
+
+### AI fix suggestions
+![AI-fix-suggestion](screenshots/fix.png)
 
 ## Author
 
