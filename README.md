@@ -169,6 +169,17 @@ or run with VS Code Live Server.
 
 ---
 
+## Project Preview
+
+### Home Screen
+![Home Screen](screenshots/home.png)
+
+### Error Explanation
+![Error Explanation](screenshots/error.png)
+
+### AI Fix Suggestion
+![AI Fix Suggestion](screenshots/fix.png)
+
 ## Author
 
 Diti Ahuja
