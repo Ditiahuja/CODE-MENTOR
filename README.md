@@ -49,7 +49,7 @@ Clean dark-themed interface inspired by modern developer tools.
 
 ---
 
-## 🏗 Architecture
+## Architecture
 
 Frontend (HTML, CSS, JavaScript)
         ↓
@@ -87,7 +87,7 @@ AI Explanation & Code Fixing
 
 ## Project Structure
 
-```text
+
 code-mentor/
 │
 ├── main.py
@@ -98,7 +98,7 @@ code-mentor/
 │
 ├── venv/
 └── __pycache__/
-```
+
 
 ## ⚙ Installation
 
@@ -177,7 +177,7 @@ Aspiring Software Developer | Python Developer | AI & ML Enthusiast
 
 ---
 
-## ⭐ Motivation
+##  Motivation
 
 The goal of Code Mentor is not only to fix code but also to help users learn from their mistakes by providing simple explanations and actionable fixes.
 
