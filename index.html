@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Code Mentor</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #1e293b, #020617);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      header {
+        margin-top: 30px;
+        font-size: 34px;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        color: #94a3b8;
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
+
+      /* Container for both cards */
+      .container {
+        width: 90%;
+        height: 65vh;
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        align-items: stretch;
+      }
+
+      .card {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card:first-child {
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .label {
+        font-size: 13px;
+        color: #94a3b8;
+        margin-bottom: 8px;
+      }
+
+      textarea {
+        flex: 1;
+        background: #020617;
+        color: #e2e8f0;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 15px;
+        font-size: 14px;
+        outline: none;
+        resize: none;
+      }
+
+      textarea:focus {
+        border: 1px solid #38bdf8;
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+      }
+
+      .controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+      }
+
+      button {
+        padding: 10px 22px;
+        background: linear-gradient(135deg, #38bdf8, #818cf8);
+        border: none;
+        border-radius: 10px;
+        color: black;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        margin-right: 10px;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 25px rgba(129, 140, 248, 0.4);
+      }
+
+      .status {
+        font-size: 12px;
+        color: #22c55e;
+        opacity: 0.8;
+      }
+
+      .output {
+        flex: 1;
+        background: #020617;
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        white-space: pre-wrap;
+        overflow-y: auto;
+      }
+
+      .editor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      #language {
+        background: #020617;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 8px 12px;
+        border-radius: 8px;
+        outline: none;
+      }
+
+      .history-card {
+        width: 90%;
+        height: 120px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 13px;
+        overflow-y: auto;
+      }
+
+      #history {
+        max-height: 200px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        color: #cbd5e1;
+        line-height: 1;
+        
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>Code Mentor</header>
+    <div class="subtitle">Understand your code, don’t just run it</div>
+
+    <div class="container">
+      <!-- Editor Card -->
+      <div class="card">
+        <div class="editor-header">
+          <div class="label">Editor</div>
+
+          <select id="language">
+            <option value="python">Python</option>
+            <option value="java" disabled>Java (Coming Soon)</option>
+            <option value="cpp" disabled>C++ (Coming Soon)</option>
+            <option value="javascript" disabled>
+              JavaScript (Coming Soon)
+            </option>
+          </select>
+        </div>
+
+        <textarea id="code">
+print("Heyyllooo user,how you doing???")
+    </textarea
+        >
+
+        <div class="controls">
+          <button onclick="runCode()">Run Code</button>
+          <button onclick="fixCode()">Fix Code</button>
+          <button onclick="applyFix()">Apply Fix</button>
+          <button onclick="copyFix()">Copy Fix</button>
+          <button onclick="clearEditor()">Clear</button>
+        </div>
+      </div>
+
+      <!-- Output Card -->
+      <div class="card">
+        <div class="label">Output</div>
+
+        <div class="output" id="output">Your output will appear here...</div>
+      </div>
+    </div>
+
+    <div class="history-card">
+      <div class="label">History</div>
+
+      <div id="history">No history yet...</div>
+    </div>
+    <script>
+      let lastFixedCode = "";
+      let historyList = [];
+
+      // RUN CODE
+      async function runCode() {
+        const code = document.getElementById("code").value;
+        historyList.unshift(code);
+
+        if (historyList.length > 10) {
+         historyList.pop();
+}
+
+        document.getElementById("history").innerHTML = historyList
+          .map((item, index) => `${index + 1}. ${item.substring(0, 60)}`)
+          .join("<br>");
+        const outputBox = document.getElementById("output");
+
+        outputBox.innerHTML = "⏳ Running your code...";
+
+        try {
+          const response = await fetch("http://127.0.0.1:8000/run", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ code: code }),
+          });
+
+          const data = await response.json();
+
+          let result = "";
+
+          if (data.output) {
+            result += "📤 OUTPUT\n";
+            result += data.output;
+          }
+
+          if (data.error) {
+            result += "\n❌ ERROR\n";
+            result += data.error;
+          }
+
+          if (data.explanation) {
+            result += "\n\n🧠 EXPLANATION\n";
+            result += data.explanation;
+          }
+
+          outputBox.innerText = result || "No output";
+        } catch (err) {
+          outputBox.innerText = "❌ Failed to run code";
+        }
+      }
+
+      // FIX CODE
+      async function fixCode() {
+        const code = document.getElementById("code").value;
+        const outputBox = document.getElementById("output");
+
+        outputBox.innerText = "Fixing code...";
+
+        try {
+          const response = await fetch("http://127.0.0.1:8000/fix", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ code: code }),
+          });
+
+          const data = await response.json();
+
+          lastFixedCode = data.fixed_code;
+
+          outputBox.innerText = "Suggested Fix:\n\n" + lastFixedCode;
+        } catch (err) {
+          outputBox.innerText = "❌ Failed to fix code";
+        }
+      }
+
+      // APPLY FIX
+      function applyFix() {
+        if (!lastFixedCode) {
+          alert("Click 'Fix Code' first!");
+          return;
+        }
+
+        document.getElementById("code").value = lastFixedCode;
+      }
+
+      // COPY FIX
+
+      function copyFix() {
+        navigator.clipboard.writeText(lastFixedCode);
+        alert("Fix copied!");
+      }
+
+      // CLEAR EDITOR
+
+      function clearEditor() {
+        document.getElementById("code").value = "";
+        document.getElementById("output").innerText =
+          "Your output will appear here...";
+      }
+    </script>
+  </body>
+</html>
